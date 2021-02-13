@@ -90,8 +90,13 @@ class GUI(Frame):
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Drive")
         misc_controls_frame.grid(row=0, column=2)
 
-        Radiobutton(misc_controls_frame, variable=self.drive, value=0, text="Hi").grid(row=0, column=0)
-        Radiobutton(misc_controls_frame, variable=self.drive, value=1, text="Lo").grid(row=1, column=0)
+        label_text = "This options controls the drive, and enables a user to choose between a high or low gearing " \
+                     "between gearbox and wheels. Low gearing grants high torque and low speed, while High gearing " \
+                     "grants the opposite tradeoff "
+
+        Label(misc_controls_frame, width=35, wraplength=250, justify="left", text=label_text).grid(row=0, column=0)
+        Radiobutton(misc_controls_frame, variable=self.drive, value=0, text="High gearing").grid(row=1, column=0)
+        Radiobutton(misc_controls_frame, variable=self.drive, value=1, text="Low gearing").grid(row=2, column=0)
 
     @staticmethod
     def draw_gear_controls(frames: Dict[str, Frame]) -> None:
@@ -133,7 +138,7 @@ class GUI(Frame):
         information_frame.grid(row=0, column=0, sticky=N + S + E + W)
         Label(information_frame, fg="grey", text="Author: Johannes Ernstsen").grid(row=0, column=0, sticky=N + S + W)
         Label(information_frame, fg="grey", text="Ernstsen Software").grid(row=1, column=0, sticky=N + S + W)
-        Label(information_frame, fg="grey", text="Version=" + self.version).grid(row=2, column=0, sticky=N + S + W)
+        Label(information_frame, fg="grey", text=self.version).grid(row=2, column=0, sticky=N + S + E)
 
 
 if __name__ == "__main__":
