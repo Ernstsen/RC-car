@@ -58,7 +58,10 @@ class CamStreamer(object):
             # our protocol simple)
             start = time.time()
             stream = io.BytesIO()
+
+            elapsed = 0
             for foo in camera.capture_continuous(stream, 'jpeg'):
+                elapsed = time.time()
                 # Write the length of the capture to the stream and flush to
                 # ensure it actually gets sent
                 self.connection.write(struct.pack('<L', stream.tell()))
@@ -72,6 +75,7 @@ class CamStreamer(object):
                 # Reset the stream for the next capture
                 stream.seek(0)
                 stream.truncate()
+                print("Picture took: " + str(elapsed - time.time()))
         # Write a length of zero to the stream to signal we're done
         self.connection.write(struct.pack('<L', 0))
 
