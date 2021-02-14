@@ -22,6 +22,7 @@ class CamStreamer(object):
         self.connection = None
         self.address: str = address
         self.port: int = port
+        self.terminate = False
 
     def initialize_connection(self):
         """
@@ -42,6 +43,8 @@ class CamStreamer(object):
         """
         Serves camera footage live
 
+        If no limit is given, streaming can be stopped by calling 'stop_camera_streaming'
+
         :param time_limit: how many seconds the stream should be served. If <0, stream continues forever
         """
         # Make a file-like object out of the connection
@@ -59,8 +62,7 @@ class CamStreamer(object):
             start = time.time()
             stream = io.BytesIO()
 
-            elapsed = 0
-            for foo in camera.capture_continuous(stream, 'jpeg'):
+            for _ in camera.capture_continuous(stream, 'jpeg'):
                 elapsed = time.time()
                 # Write the length of the capture to the stream and flush to
                 # ensure it actually gets sent
@@ -70,7 +72,7 @@ class CamStreamer(object):
                 stream.seek(0)
                 self.connection.write(stream.read())
                 # If we've been capturing for more than time_limit seconds, quit
-                if 0 < time_limit < time.time() - start:
+                if 0 < time_limit < time.time() - start or self.terminate:
                     break
                 # Reset the stream for the next capture
                 stream.seek(0)
@@ -78,6 +80,12 @@ class CamStreamer(object):
                 print("Picture took: " + str(elapsed - time.time()))
         # Write a length of zero to the stream to signal we're done
         self.connection.write(struct.pack('<L', 0))
+
+    def stop_camera_streaming(self) -> None:
+        """
+        Requests that the streamer stops streaming the camera feed
+        """
+        self.terminate = True
 
 
 if __name__ == "__main__":
