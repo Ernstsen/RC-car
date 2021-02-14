@@ -2,6 +2,20 @@
 import socket
 
 
+def create_server(address: str, port: int) -> socket:
+    """
+    Establishes a connection to a server
+
+    :param address: server address to connect to
+    :param port: port to be used
+    :return: socket with an active connection to the specified server
+    """
+    server = socket.socket()
+    server.bind(('0.0.0.0', 8000))
+    server.listen(0)
+    return server
+
+
 def connect(address: str, port: int) -> socket:
     """
     Establishes a connection to a server
