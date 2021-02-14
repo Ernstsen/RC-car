@@ -4,8 +4,16 @@ from typing import Dict
 
 
 class GUI(Frame):
+    """
+    Class handling the graphics user interface of the application
+    """
 
     def __init__(self, master=None):
+        """
+        Constructor for the graphics user interface
+
+        :param master: master frame - from Frame constructor
+        """
         # this will create a label widget
         Frame.__init__(self, master)
 
@@ -26,6 +34,12 @@ class GUI(Frame):
 
     @staticmethod
     def build_frame_structure(root_frame: Frame) -> Dict[str, Frame]:
+        """
+        builds application structure, in the form of frames in a grid.
+
+        :param root_frame: the frame for the structure to reside in
+        :return: the constructed structure
+        """
         # noinspection PyDictCreation
         frames: Dict[str, Frame] = {}
 
