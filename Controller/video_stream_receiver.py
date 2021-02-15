@@ -23,7 +23,7 @@ class VideoStreamReceiver(object):
         :param port: port to be used when receiving video stream - must be free on this device, as a server is created
         """
         self.display_label = display_label
-        self.server_socket = create_server('0.0.0.0', port)
+        self.server_socket = create_server(port)
         # Accept a single connection and make a file-like object out of it
         self.connection = self.server_socket.accept()[0].makefile('rb')
         self.terminate = False
