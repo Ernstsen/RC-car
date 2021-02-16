@@ -43,23 +43,26 @@ class GUI(Frame):
         # noinspection PyDictCreation
         frames: Dict[str, Frame] = {}
 
+        padding: int = 2
+
         frames["stream_window"] = Frame(root_frame)
-        frames["stream_window"].grid(row=0, column=0, rowspan=4, columnspan=5)
+        frames["stream_window"].grid(row=0, column=0, rowspan=4, columnspan=5, sticky=N + S + E + W, padx=padding,
+                                     pady=padding)
 
         frames["misc_controls"] = Frame(root_frame)
-        frames["misc_controls"].grid(row=4, column=0)
+        frames["misc_controls"].grid(row=4, column=0, sticky=N + S + E + W, padx=padding, pady=padding)
 
         frames["drive_controls"] = Frame(root_frame)
-        frames["drive_controls"].grid(row=0, column=5)
+        frames["drive_controls"].grid(row=0, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
 
         frames["gear_controls"] = Frame(root_frame)
-        frames["gear_controls"].grid(row=2, column=5)
+        frames["gear_controls"].grid(row=2, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
 
         frames["throttle_controls"] = Frame(root_frame)
-        frames["throttle_controls"].grid(row=3, column=5)
+        frames["throttle_controls"].grid(row=3, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
 
         frames["info"] = Frame(root_frame)
-        frames["info"].grid(row=4, column=5, sticky=N + S + E + W)
+        frames["info"].grid(row=4, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
 
         return frames
 
@@ -150,7 +153,8 @@ class GUI(Frame):
         frame: Frame = frames["info"]
         information_frame: LabelFrame = LabelFrame(frame, text="About", width=500, height=500)
         information_frame.grid(row=0, column=0, sticky=N + S + E + W)
-        Label(information_frame, fg="grey", text="Author: Johannes Ernstsen").grid(row=0, column=0, sticky=N + S + W)
+        Label(information_frame, fg="grey", text="Author: Johannes Ernstsen", width=35).grid(row=0, column=0,
+                                                                                             sticky=N + S + W)
         Label(information_frame, fg="grey", text="Ernstsen Software").grid(row=1, column=0, sticky=N + S + W)
         Label(information_frame, fg="grey", text=self.version).grid(row=2, column=0, sticky=N + S + E)
 
