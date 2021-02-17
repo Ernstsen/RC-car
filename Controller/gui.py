@@ -152,8 +152,8 @@ class GUI(Frame):
         frame: Frame = frames["info"]
         information_frame: LabelFrame = LabelFrame(frame, text="About", width=500, height=500)
         information_frame.grid(row=0, column=0, sticky=N + S + E + W)
-        Label(information_frame, fg="grey", text="Author: Johannes Ernstsen", width=35).grid(row=0, column=0,
-                                                                                             sticky=N + S + W)
+        Label(information_frame, fg="grey", text="Author: Johannes Ernstsen", anchor=NW, width=35) \
+            .grid(row=0, column=0, sticky=N + S + W)
         Label(information_frame, fg="grey", text="Ernstsen Software").grid(row=1, column=0, sticky=N + S + W)
         Label(information_frame, fg="grey", text=self.version).grid(row=2, column=0, sticky=N + S + E)
 
