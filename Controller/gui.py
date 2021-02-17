@@ -46,23 +46,22 @@ class GUI(Frame):
         padding: int = 2
 
         frames["stream_window"] = Frame(root_frame)
-        frames["stream_window"].grid(row=0, column=0, rowspan=4, columnspan=5, sticky=N + S + E + W, padx=padding,
-                                     pady=padding)
+        frames["stream_window"].grid(row=0, column=0, rowspan=4, columnspan=5, sticky=NSEW, padx=padding, pady=padding)
 
         frames["misc_controls"] = Frame(root_frame)
-        frames["misc_controls"].grid(row=4, column=0, sticky=N + S + E + W, padx=padding, pady=padding)
+        frames["misc_controls"].grid(row=4, column=0, sticky=NSEW, padx=padding, pady=padding)
 
         frames["drive_controls"] = Frame(root_frame)
-        frames["drive_controls"].grid(row=0, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
+        frames["drive_controls"].grid(row=0, column=5, sticky=NSEW, padx=padding, pady=padding)
 
         frames["gear_controls"] = Frame(root_frame)
-        frames["gear_controls"].grid(row=2, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
+        frames["gear_controls"].grid(row=2, column=5, sticky=NSEW, padx=padding, pady=padding)
 
         frames["throttle_controls"] = Frame(root_frame)
-        frames["throttle_controls"].grid(row=3, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
+        frames["throttle_controls"].grid(row=3, column=5, sticky=NSEW, padx=padding, pady=padding)
 
         frames["info"] = Frame(root_frame)
-        frames["info"].grid(row=4, column=5, sticky=N + S + E + W, padx=padding, pady=padding)
+        frames["info"].grid(row=4, column=5, sticky=NSEW, padx=padding, pady=padding)
 
         return frames
 
