@@ -1,6 +1,7 @@
 from tkinter import *
-
 from typing import Dict
+
+from video import VideoViewer, StaticImageViewer
 
 
 class GUI(Frame):
@@ -8,7 +9,7 @@ class GUI(Frame):
     Class handling the graphics user interface of the application
     """
 
-    def __init__(self, master=None):
+    def __init__(self, master=None, viewer: VideoViewer = StaticImageViewer(r"../unnamed.png")):
         """
         Constructor for the graphics user interface
 
@@ -22,6 +23,7 @@ class GUI(Frame):
         self.version = "V0.1"
         self.img = None  # Initializes val img, containing placeholder for video stream
         self.drive: IntVar = IntVar()
+        self.viewer = viewer
 
         structure = self.build_frame_structure(master)
 
@@ -76,10 +78,14 @@ class GUI(Frame):
         """
         frame = frames["stream_window"]
         # Placeholder for video stream
-        self.img = PhotoImage(file=r"..\unnamed.png")
+        # self.img = PhotoImage(file=r"..\unnamed.png")
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Video Stream")
         misc_controls_frame.grid(row=0, column=0)
-        Label(misc_controls_frame, image=self.img).grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
+        # Label(misc_controls_frame, image=self.img).grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
+        label = Label(misc_controls_frame)
+        label.grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
+        self.viewer.set_label(label)
+        self.viewer.video_stream_loop()
 
     @staticmethod
     def draw_misc_controls(frames: Dict[str, Frame]) -> None:

@@ -8,11 +8,12 @@ from tkinter import *
 
 from PIL import ImageTk, Image
 
-from server_utilities import create_server
+from Controller.server_utilities import create_server
+from .video_viewer import VideoViewer
 
 
 # noinspection PyBroadException
-class VideoStreamReceiver(object):
+class VideoStreamReceiver(VideoViewer):
     """
     class for handling the video-stream from the Raspberry Pi
     """
@@ -22,6 +23,7 @@ class VideoStreamReceiver(object):
         :param display_label: label used to display stream inside
         :param port: port to be used when receiving video stream - must be free on this device, as a server is created
         """
+        super().__init__(display_label)
         self.display_label = display_label
         self.server_socket = create_server(port)
         # Accept a single connection and make a file-like object out of it
@@ -48,9 +50,9 @@ class VideoStreamReceiver(object):
                 # Rewind the stream, open it as an image with PIL and do some processing on it
                 image_stream.seek(0)
                 image = Image.open(image_stream)
-                imgtk = ImageTk.PhotoImage(image=image)
-                self.display_label.imgtk = imgtk
-                self.display_label.configure(image=imgtk)
+                img_tk = ImageTk.PhotoImage(image=image)
+                self.display_label.imgtk = img_tk
+                self.display_label.configure(image=img_tk)
                 print("Display took: " + str(elapsed - time.time()))
         except Exception:
             print("Something unexpected happened, causing the stream to crash")
