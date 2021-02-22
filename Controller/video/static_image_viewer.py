@@ -17,6 +17,6 @@ class StaticImageViewer(VideoViewer):
         self.label: Label = display_label
 
     def video_stream_loop(self) -> None:
-        self.img: PhotoImage = PhotoImage(file=r"..\unnamed.png")
+        self.img: PhotoImage = PhotoImage(file=r"../../unnamed.png")
         self.label.imgtk = self.img
         self.label.configure(image=self.img)
