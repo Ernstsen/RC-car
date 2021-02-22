@@ -6,7 +6,7 @@ from . import StaticImageViewer
 
 class TestStaticImageViewer(unittest.TestCase):
     def test_sets_image(self):
-        viewer: StaticImageViewer = StaticImageViewer(r"../unnamed.png")
+        viewer: StaticImageViewer = StaticImageViewer(r"../../unnamed.png")
 
         viewer.set_label(Label())
         self.assertIsNotNone(viewer.label, msg="Label was not set!")
