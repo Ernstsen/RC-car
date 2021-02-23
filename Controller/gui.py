@@ -194,5 +194,5 @@ class GUI(Frame):
 
 
 if __name__ == "__main__":
-    gui = GUI(enabled={})
+    gui = GUI()
     gui.mainloop()
