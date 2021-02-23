@@ -9,7 +9,8 @@ class GUI(Frame):
     Class handling the graphics user interface of the application
     """
 
-    def __init__(self, master=None, viewer: VideoViewer = StaticImageViewer(r"../unnamed.png")):
+    def __init__(self, master=None, viewer: VideoViewer = StaticImageViewer(r"../unnamed.png"),
+                 enabled: Dict[str, bool] = None):
         """
         Constructor for the graphics user interface
 
@@ -24,6 +25,16 @@ class GUI(Frame):
         self.img = None  # Initializes val img, containing placeholder for video stream
         self.drive: IntVar = IntVar()
         self.viewer = viewer
+
+        if enabled:
+            self.enabled = enabled
+        else:
+            self.enabled: Dict[str, bool] = {
+                "misc": True,
+                "drive": True,
+                "gear": True,
+                "throttle": True
+            }
 
         structure = self.build_frame_structure(master)
 
@@ -87,18 +98,22 @@ class GUI(Frame):
         self.viewer.set_label(label)
         self.viewer.video_stream_loop()
 
-    @staticmethod
-    def draw_misc_controls(frames: Dict[str, Frame]) -> None:
+    def draw_misc_controls(self, frames: Dict[str, Frame]) -> None:
         """
         Creates miscellaneous controls in frame 'misc_controls'
 
         :type frames: frames dictionary. Maps string to Frame
         :param frames: frame dictionary
         """
+        if "misc" not in self.enabled:
+            return
+        enabled: bool = self.enabled["misc"]
+        state = ("active" if enabled else "disabled")
+
         frame: Frame = frames["misc_controls"]
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Miscellaneous Controls", width=250)
         misc_controls_frame.grid(row=0, column=0)
-        Button(misc_controls_frame, text="Lights").grid(row=0, column=0)
+        Button(misc_controls_frame, text="Lights", state=state).grid(row=0, column=0)
 
     def draw_drive_controls(self, frames: Dict[str, Frame]) -> None:
         """
@@ -108,6 +123,11 @@ class GUI(Frame):
         :type frames: frames dictionary. Maps string to Frame
         :param frames: frame dictionary
         """
+        if "drive" not in self.enabled:
+            return
+        enabled: bool = self.enabled["drive"]
+        state = ("active" if enabled else "disabled")
+
         frame: Frame = frames["drive_controls"]
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Drive")
         misc_controls_frame.grid(row=0, column=2)
@@ -116,37 +136,46 @@ class GUI(Frame):
                      "between gearbox and wheels. Low gearing grants high torque and low speed, while High gearing " \
                      "grants the opposite tradeoff "
 
-        Label(misc_controls_frame, width=35, wraplength=250, justify="left", text=label_text).grid(row=0, column=0)
-        Radiobutton(misc_controls_frame, variable=self.drive, value=0, text="High gearing").grid(row=1, column=0)
-        Radiobutton(misc_controls_frame, variable=self.drive, value=1, text="Low gearing").grid(row=2, column=0)
+        Label(misc_controls_frame, width=35, wraplength=250, justify="left", state=state, text=label_text) \
+            .grid(row=0, column=0)
+        Radiobutton(misc_controls_frame, variable=self.drive, value=0, state=state, text="High gearing") \
+            .grid(row=1, column=0)
+        Radiobutton(misc_controls_frame, variable=self.drive, value=1, state=state, text="Low gearing") \
+            .grid(row=2, column=0)
 
-    @staticmethod
-    def draw_gear_controls(frames: Dict[str, Frame]) -> None:
+    def draw_gear_controls(self, frames: Dict[str, Frame]) -> None:
         """
         Creates controls for gear controls.
 
         :type frames: frames dictionary. Maps string to Frame
         :param frames: frame dictionary
         """
+        if "gear" not in self.enabled:
+            return
+        enabled: bool = self.enabled["gear"]
+        state = ("normal" if enabled else "disabled")
         frame: Frame = frames["gear_controls"]
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Gear")
         misc_controls_frame.grid(row=1, column=2)
 
-        Spinbox(misc_controls_frame, values=(1, 2, 3, 4)).grid(row=0, column=0)
+        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state).grid(row=0, column=0)
 
-    @staticmethod
-    def draw_throttle_controls(frames: Dict[str, Frame]) -> None:
+    def draw_throttle_controls(self, frames: Dict[str, Frame]) -> None:
         """
         Creates controls for gear controls.
 
         :type frames: frames dictionary. Maps string to Frame
         :param frames: frame dictionary
         """
+        if "throttle" not in self.enabled:
+            return
+        enabled: bool = self.enabled["throttle"]
+        state = ("normal" if enabled else "disabled")
         frame: Frame = frames["throttle_controls"]
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Throttle")
         misc_controls_frame.grid(row=1, column=2)
 
-        Spinbox(misc_controls_frame, values=(1, 2, 3, 4)).grid(row=0, column=0)
+        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state).grid(row=0, column=0)
 
     def draw_information(self, frames: Dict[str, Frame]) -> None:
         """
