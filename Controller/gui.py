@@ -26,7 +26,7 @@ class GUI(Frame):
         self.drive: IntVar = IntVar()
         self.viewer = viewer
 
-        if enabled:
+        if enabled is not None:
             self.enabled = enabled
         else:
             self.enabled: Dict[str, bool] = {
@@ -194,5 +194,5 @@ class GUI(Frame):
 
 
 if __name__ == "__main__":
-    gui = GUI()
+    gui = GUI(enabled={})
     gui.mainloop()
