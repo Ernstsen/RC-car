@@ -92,10 +92,9 @@ class GUI(Frame):
         """
         frame = frames["stream_window"]
         # Placeholder for video stream
-        # self.img = PhotoImage(file=r"..\unnamed.png")
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Video Stream")
         misc_controls_frame.grid(row=0, column=0)
-        # Label(misc_controls_frame, image=self.img).grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
+        
         label = Label(misc_controls_frame)
         label.grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
         self.viewer.set_label(label)
