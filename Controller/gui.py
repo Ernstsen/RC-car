@@ -15,6 +15,9 @@ class GUI(Frame):
         Constructor for the graphics user interface
 
         :param master: master frame - from Frame constructor
+        :param viewer: VideoViewer to display stream - defaults to static image
+        :param enabled: map from strings to booleans for whether parts are enabled.
+        If False for disabled, True for enabled and missing for non-displayed. Keys: 'misc, drive, gear, throttle'
         """
         # this will create a label widget
         Frame.__init__(self, master)
