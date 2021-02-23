@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.font import Font
 from typing import Dict
 
 from video import VideoViewer, StaticImageViewer
@@ -28,6 +29,7 @@ class GUI(Frame):
         self.img = None  # Initializes val img, containing placeholder for video stream
         self.drive: IntVar = IntVar()
         self.viewer = viewer
+        self.spinbox_font = Font(family="Helvetica", size=36)
 
         if enabled is not None:
             self.enabled = enabled
@@ -94,7 +96,7 @@ class GUI(Frame):
         # Placeholder for video stream
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Video Stream")
         misc_controls_frame.grid(row=0, column=0)
-        
+
         label = Label(misc_controls_frame)
         label.grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
         self.viewer.set_label(label)
@@ -157,10 +159,17 @@ class GUI(Frame):
         enabled: bool = self.enabled["gear"]
         state = ("normal" if enabled else "disabled")
         frame: Frame = frames["gear_controls"]
+
         misc_controls_frame: LabelFrame = LabelFrame(frame, text="Gear")
         misc_controls_frame.grid(row=1, column=2)
 
-        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state).grid(row=0, column=0)
+        label_text: str = "Controls the gear of the vehicle"
+
+        Label(misc_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=25) \
+            .grid(row=0, column=0, sticky=N + S + W)
+
+        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state, width=1, font=self.spinbox_font)\
+            .grid(row=0, column=1, padx=5, pady=5)
 
     def draw_throttle_controls(self, frames: Dict[str, Frame]) -> None:
         """
@@ -174,10 +183,15 @@ class GUI(Frame):
         enabled: bool = self.enabled["throttle"]
         state = ("normal" if enabled else "disabled")
         frame: Frame = frames["throttle_controls"]
-        misc_controls_frame: LabelFrame = LabelFrame(frame, text="Throttle")
-        misc_controls_frame.grid(row=1, column=2)
+        throttle_controls_frame: LabelFrame = LabelFrame(frame, text="Throttle")
+        throttle_controls_frame.grid(row=1, column=2)
 
-        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state).grid(row=0, column=0)
+        label_text: str = "Throttle control - scale from 0 to 10, 0 being off"
+        Label(throttle_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=25) \
+            .grid(row=0, column=0, sticky=N + S + W)
+
+        Spinbox(throttle_controls_frame, from_=0, to_=10, increment=1, state=state, width=1, font=self.spinbox_font)\
+            .grid(row=0, column=1, padx=5, pady=5)
 
     def draw_information(self, frames: Dict[str, Frame]) -> None:
         """
@@ -187,7 +201,7 @@ class GUI(Frame):
         :param frames: frame dictionary
         """
         frame: Frame = frames["info"]
-        information_frame: LabelFrame = LabelFrame(frame, text="About", width=500, height=500)
+        information_frame: LabelFrame = LabelFrame(frame, text="About")
         information_frame.grid(row=0, column=0, sticky=N + S + E + W)
         Label(information_frame, fg="grey", text="Author: Johannes Ernstsen", anchor=NW, width=35) \
             .grid(row=0, column=0, sticky=N + S + W)
