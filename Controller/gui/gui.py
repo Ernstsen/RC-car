@@ -2,11 +2,11 @@ from tkinter import *
 from tkinter.font import Font
 from typing import Dict, List
 
-from gui import MiscControlSpec
-from gui.components import HorizontalSpinbox
-from gui.modules import MiscControlsModule
-from vehicle_control import Controller, ControllerSimulator
-from video import VideoViewer, StaticImageViewer
+from Controller.vehicle_control import Controller, ControllerSimulator
+from Controller.video import VideoViewer, StaticImageViewer
+from .components import HorizontalSpinbox
+from .model import MiscControlSpec
+from .modules import MiscControlsModule
 
 
 class GUI(Frame):

@@ -8,7 +8,7 @@ from tkinter import *
 
 from PIL import ImageTk, Image
 
-from Controller.server_utilities import create_server
+from Controller.communication.server_utilities import create_server
 from .video_viewer import VideoViewer
 
 
