@@ -2,11 +2,10 @@ from tkinter import *
 from tkinter.font import Font
 from typing import Dict, List
 
+from Controller.gui.model import MiscControlSpec
+from Controller.gui.modules import *
 from Controller.vehicle_control import Controller, ControllerSimulator
 from Controller.video import VideoViewer, StaticImageViewer
-from .components import HorizontalSpinbox
-from .model import MiscControlSpec
-from .modules import MiscControlsModule
 
 
 class GUI(Frame):
@@ -21,6 +20,8 @@ class GUI(Frame):
                  misc_controls: List[MiscControlSpec] = None):
         """
         Constructor for the graphics user interface
+
+        default values does not communicate with other instances
 
         :param master: master frame - from Frame constructor
         :param viewer: VideoViewer to display stream - defaults to static image
@@ -37,11 +38,7 @@ class GUI(Frame):
         self.master.title("Remote Vehicle Controller")
         self.master.resizable(width=FALSE, height=FALSE)
         self.version = "V0.1"
-        self.img = None  # Initializes val img, containing placeholder for video stream
-        self.drive: IntVar = IntVar(value=0)
-        self.gear: IntVar = IntVar(value=1)
-        self.throttle: IntVar = IntVar(value=0)
-        self.viewer = viewer
+        self.viewer: VideoViewer = viewer
         self.controller = controller
         self.spinbox_font = Font(family="Helvetica", size=36)
 
@@ -112,14 +109,7 @@ class GUI(Frame):
         :param frames: frame dictionary
         """
         frame = frames["stream_window"]
-        # Placeholder for video stream
-        misc_controls_frame: LabelFrame = LabelFrame(frame, text="Video Stream")
-        misc_controls_frame.grid(row=0, column=0)
-
-        label = Label(misc_controls_frame)
-        label.grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
-        self.viewer.set_label(label)
-        self.viewer.video_stream_loop()
+        StreamFrame(frame, self.viewer).grid(sticky=N + S + E + W)
 
     def draw_misc_controls(self, frames: Dict[str, Frame], misc_controls: List[MiscControlSpec]) -> None:
         """
@@ -134,7 +124,7 @@ class GUI(Frame):
         state = ("active" if enabled else "disabled")
 
         frame: Frame = frames["misc_controls"]
-        MiscControlsModule(master=frame, misc_controls=misc_controls, state=state).grid(row=0, column=0)
+        MiscControlsModule(master=frame, misc_controls=misc_controls, state=state).grid(sticky=N + S + E + W)
 
     def draw_drive_controls(self, frames: Dict[str, Frame]) -> None:
         """
@@ -150,22 +140,7 @@ class GUI(Frame):
         state = ("active" if enabled else "disabled")
 
         frame: Frame = frames["drive_controls"]
-        misc_controls_frame: LabelFrame = LabelFrame(frame, text="Drive")
-        misc_controls_frame.grid(row=0, column=2)
-
-        def on_change():
-            self.controller.set_drive(self.drive.get())
-
-        label_text = "This options controls the drive, and enables a user to choose between a high or low gearing " \
-                     "between gearbox and wheels. Low gearing grants high torque and low speed, while High gearing " \
-                     "grants the opposite tradeoff "
-
-        Label(misc_controls_frame, width=35, wraplength=250, justify="left", state=state, text=label_text) \
-            .grid(row=0, column=0)
-        Radiobutton(misc_controls_frame, variable=self.drive, value=0, state=state, command=on_change,
-                    text="Low gearing").grid(row=1, column=0)
-        Radiobutton(misc_controls_frame, variable=self.drive, value=1, state=state, command=on_change,
-                    text="High gearing").grid(row=2, column=0)
+        DriveControls(frame, state=state, set_drive=self.controller.set_drive).grid(sticky=N + S + E + W)
 
     def draw_gear_controls(self, frames: Dict[str, Frame]) -> None:
         """
@@ -179,20 +154,8 @@ class GUI(Frame):
         enabled: bool = self.enabled["gear"]
         state = ("normal" if enabled else "disabled")
         frame: Frame = frames["gear_controls"]
-
-        misc_controls_frame: LabelFrame = LabelFrame(frame, text="Gear")
-        misc_controls_frame.grid(row=1, column=2)
-
-        label_text: str = "Controls the gear of the vehicle"
-
-        def on_update():
-            self.controller.set_gear(self.gear.get())
-
-        Label(misc_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=25) \
-            .grid(row=0, column=0, sticky=N + S + W)
-
-        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state, width=1, textvariable=self.gear,
-                command=on_update, font=self.spinbox_font).grid(row=0, column=1, padx=5, pady=5)
+        GearControls(frame, state=state, set_gear=self.controller.set_drive, font=self.spinbox_font)\
+            .grid(sticky=N + S + E + W)
 
     def draw_throttle_controls(self, frames: Dict[str, Frame]) -> None:
         """
@@ -206,19 +169,8 @@ class GUI(Frame):
         enabled: bool = self.enabled["throttle"]
         state = ("normal" if enabled else "disabled")
         frame: Frame = frames["throttle_controls"]
-        throttle_controls_frame: LabelFrame = LabelFrame(frame, text="Throttle")
-        throttle_controls_frame.grid(row=0, column=0)
-
-        def on_update():
-            self.controller.set_gear(self.gear.get())
-
-        label_text: str = "Throttle control - scale from 0 to 10, 0 being off"
-        Label(throttle_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=25) \
-            .grid(row=0, column=0, sticky=N + S + W)
-
-        Spinbox(throttle_controls_frame, from_=0, to_=10, increment=1, state=state, width=1,
-                textvariable=self.throttle, command=on_update, font=self.spinbox_font) \
-            .grid(row=0, column=1, padx=5, pady=5)
+        ThrottleControls(frame, state=state, set_throttle=self.controller.set_throttle, font=self.spinbox_font)\
+            .grid(sticky=N + S + E + W)
 
     def draw_direction_controls(self, frames: Dict[str, Frame]) -> None:
         """
@@ -233,15 +185,7 @@ class GUI(Frame):
         state = ("normal" if enabled else "disabled")
 
         frame: Frame = frames["direction_controls"]
-        direction_controls_frame: LabelFrame = LabelFrame(frame, text="Direction")
-        direction_controls_frame.grid(row=0, column=0)
-
-        label_text: str = "Controls vehicle direction"
-        Label(direction_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=23) \
-            .grid(row=0, column=0, sticky=N + S + W)
-
-        HorizontalSpinbox(direction_controls_frame, from_=0, to_=10, increment=1, state=state,
-                          on_update=self.controller.set_direction).grid(row=0, column=1, padx=5, pady=5)
+        DirectionControls(frame, state=state, set_direction=self.controller.set_direction).grid(sticky=N + S + E + W)
 
     def draw_information(self, frames: Dict[str, Frame]) -> None:
         """
@@ -251,12 +195,7 @@ class GUI(Frame):
         :param frames: frame dictionary
         """
         frame: Frame = frames["info"]
-        information_frame: LabelFrame = LabelFrame(frame, text="About")
-        information_frame.grid(row=0, column=0, sticky=N + S + E + W)
-        Label(information_frame, fg="grey", text="Author: Johannes Ernstsen", anchor=NW, width=35) \
-            .grid(row=0, column=0, sticky=N + S + W)
-        Label(information_frame, fg="grey", text="Ernstsen Software").grid(row=1, column=0, sticky=N + S + W)
-        Label(information_frame, fg="grey", text=self.version).grid(row=2, column=0, sticky=N + S + E)
+        InformationFrame(frame, self.version).grid(sticky=N + S + E + W)
 
 
 if __name__ == "__main__":

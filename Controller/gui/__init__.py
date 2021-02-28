@@ -1,3 +1,3 @@
-from .components import *
+from .application_gui import GUI
 
-__all__ = ["components"]
+__all__ = ["GUI"]

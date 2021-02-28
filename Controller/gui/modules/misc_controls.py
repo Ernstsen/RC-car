@@ -1,7 +1,7 @@
 from tkinter import Frame, LabelFrame, Label, Radiobutton, IntVar, Variable
 from typing import List, Dict
 
-from Controller.gui import MiscControlSpec
+from Controller.gui.model import MiscControlSpec
 
 
 class MiscControlsModule(Frame):
@@ -22,12 +22,12 @@ class MiscControlsModule(Frame):
             self.build_input_entity(control, self.misc_controls_frame) \
                 .grid(row=control.row, column=control.column)
 
-    def grid(self, row=0, column=0) -> None:
+    def grid(self, row=0, column=0, **kwargs) -> None:
         """
         :param row: desired row for the module
         :param column: desired column for the module
         """
-        self.misc_controls_frame.grid(row=row, column=column)
+        self.misc_controls_frame.grid(row=row, column=column, **kwargs)
 
     def build_input_entity(self, control: MiscControlSpec, parent: LabelFrame) -> LabelFrame:
         """
