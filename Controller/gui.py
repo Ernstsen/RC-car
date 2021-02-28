@@ -1,8 +1,11 @@
 from tkinter import *
 from tkinter.font import Font
-from typing import Dict
-from gui.components import HorizontalSpinbox
+from typing import Dict, List
 
+from gui import MiscControlSpec
+from gui.components import HorizontalSpinbox
+from gui.modules import MiscControlsModule
+from vehicle_control import Controller, ControllerSimulator
 from video import VideoViewer, StaticImageViewer
 
 
@@ -11,14 +14,20 @@ class GUI(Frame):
     Class handling the graphics user interface of the application
     """
 
-    def __init__(self, master=None, viewer: VideoViewer = StaticImageViewer(r"../unnamed.png"),
-                 enabled: Dict[str, bool] = None):
+    def __init__(self, master=None,
+                 viewer: VideoViewer = StaticImageViewer(r"../unnamed.png"),
+                 enabled: Dict[str, bool] = None,
+                 controller: Controller = ControllerSimulator(),
+                 misc_controls: List[MiscControlSpec] = None):
         """
         Constructor for the graphics user interface
 
         :param master: master frame - from Frame constructor
         :param viewer: VideoViewer to display stream - defaults to static image
         :param enabled: map from strings to booleans for whether parts are enabled.
+        :param controller: object allowing interfacing with the RC vehicle
+        :param misc_controls: list of MiscControlSpecs to be rendered in misc_controls section
+
         If False for disabled, True for enabled and missing for non-displayed.
         Keys: 'misc, drive, gear, throttle', 'direction'
         """
@@ -31,6 +40,7 @@ class GUI(Frame):
         self.img = None  # Initializes val img, containing placeholder for video stream
         self.drive: IntVar = IntVar()
         self.viewer = viewer
+        self.controller = controller
         self.spinbox_font = Font(family="Helvetica", size=36)
 
         if enabled is not None:
@@ -47,7 +57,7 @@ class GUI(Frame):
         structure = self.build_frame_structure(master)
 
         self.draw_stream_window(structure)
-        self.draw_misc_controls(structure)
+        self.draw_misc_controls(structure, misc_controls)
         self.draw_drive_controls(structure)
         self.draw_gear_controls(structure)
         self.draw_throttle_controls(structure)
@@ -109,22 +119,20 @@ class GUI(Frame):
         self.viewer.set_label(label)
         self.viewer.video_stream_loop()
 
-    def draw_misc_controls(self, frames: Dict[str, Frame]) -> None:
+    def draw_misc_controls(self, frames: Dict[str, Frame], misc_controls: List[MiscControlSpec]) -> None:
         """
         Creates miscellaneous controls in frame 'misc_controls'
 
-        :type frames: frames dictionary. Maps string to Frame
-        :param frames: frame dictionary
+        :param frames: frames dictionary. Maps string to Frame
+        :param misc_controls: list of MiscControlSpec to be rendered
         """
-        if "misc" not in self.enabled:
+        if "misc" not in self.enabled or not misc_controls:
             return
         enabled: bool = self.enabled["misc"]
         state = ("active" if enabled else "disabled")
 
         frame: Frame = frames["misc_controls"]
-        misc_controls_frame: LabelFrame = LabelFrame(frame, text="Miscellaneous Controls", width=250)
-        misc_controls_frame.grid(row=0, column=0)
-        Button(misc_controls_frame, text="Lights", state=state).grid(row=0, column=0)
+        MiscControlsModule(master=frame, misc_controls=misc_controls, state=state).grid(row=0, column=0)
 
     def draw_drive_controls(self, frames: Dict[str, Frame]) -> None:
         """
@@ -175,7 +183,7 @@ class GUI(Frame):
         Label(misc_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=25) \
             .grid(row=0, column=0, sticky=N + S + W)
 
-        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state, width=1, font=self.spinbox_font)\
+        Spinbox(misc_controls_frame, values=(1, 2, 3, 4), state=state, width=1, font=self.spinbox_font) \
             .grid(row=0, column=1, padx=5, pady=5)
 
     def draw_throttle_controls(self, frames: Dict[str, Frame]) -> None:
@@ -197,7 +205,7 @@ class GUI(Frame):
         Label(throttle_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=25) \
             .grid(row=0, column=0, sticky=N + S + W)
 
-        Spinbox(throttle_controls_frame, from_=0, to_=10, increment=1, state=state, width=1, font=self.spinbox_font)\
+        Spinbox(throttle_controls_frame, from_=0, to_=10, increment=1, state=state, width=1, font=self.spinbox_font) \
             .grid(row=0, column=1, padx=5, pady=5)
 
     def draw_direction_controls(self, frames: Dict[str, Frame]) -> None:
@@ -220,8 +228,8 @@ class GUI(Frame):
         Label(direction_controls_frame, justify="left", text=label_text, wraplength=170, anchor=NW, width=23) \
             .grid(row=0, column=0, sticky=N + S + W)
 
-        HorizontalSpinbox(direction_controls_frame, from_=0, to_=10, increment=1, state=state)\
-            .grid(row=0, column=1, padx=5, pady=5)
+        HorizontalSpinbox(direction_controls_frame, from_=0, to_=10, increment=1, state=state,
+                          on_update=self.controller.set_direction).grid(row=0, column=1, padx=5, pady=5)
 
     def draw_information(self, frames: Dict[str, Frame]) -> None:
         """
@@ -240,5 +248,8 @@ class GUI(Frame):
 
 
 if __name__ == "__main__":
-    gui = GUI()
+    misc_controls_dict: List[MiscControlSpec] = [
+        MiscControlSpec("Lights", lambda v: print(v), bool, 0, 0)
+    ]
+    gui = GUI(misc_controls=misc_controls_dict)
     gui.mainloop()
