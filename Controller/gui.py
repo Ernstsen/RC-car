@@ -249,7 +249,7 @@ class GUI(Frame):
 
 if __name__ == "__main__":
     misc_controls_dict: List[MiscControlSpec] = [
-        MiscControlSpec("Lights", lambda v: print(v), bool, 0, 0)
+        MiscControlSpec(display_name="Lights", method=lambda v: print(v), param_type=bool, row=0, column=0)
     ]
     gui = GUI(misc_controls=misc_controls_dict)
     gui.mainloop()
