@@ -19,9 +19,9 @@ class HorizontalSpinbox(Widget):
         self.on_update: Callable = on_update
 
         self.frame: Frame = Frame(master)
-        Button(self.frame, text="left", command=self.decrement_func).grid(row=0, column=0)
+        Button(self.frame, text="left", state=state, command=self.decrement_func).grid(row=0, column=0)
         self.label: Label = Label(self.frame, textvariable=self.valueVar).grid(row=0, column=1)
-        Button(self.frame, text="right", command=self.increment_func).grid(row=0, column=2)
+        Button(self.frame, text="right", state=state, command=self.increment_func).grid(row=0, column=2)
 
     def grid(self, row=0, column=0, sticky=NSEW, **kw):
         self.frame.grid(row=row, column=column, sticky=sticky, **kw)
