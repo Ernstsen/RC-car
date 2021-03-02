@@ -3,7 +3,9 @@ import argparse
 import socket
 import threading
 
-from cam_streamer import CamStreamer
+from RaspberryPi.cam import Streamer
+from RaspberryPi.server.command_handler import CommandHandler
+from RaspberryPi.server.printing_command_handler import PrintingCommandHandler
 
 
 class Server(object):
@@ -11,13 +13,16 @@ class Server(object):
     Hosts server as an interface for the RC vehicle
     """
 
-    def __init__(self, port: int = 8080):
+    def __init__(self, port: int = 8080,
+                 command_handler: CommandHandler = PrintingCommandHandler(),
+                 streamer: Streamer = Streamer()):
         """
         :param port: port to host the server one
         """
         self.port = port
         self.socket = None
-        self.streamer = None
+        self.streamer = streamer
+        self.command_handler = command_handler
         self.stream_thread = None
         self.initialize_server()
 
@@ -39,14 +44,12 @@ class Server(object):
         """
         while True:
             conn, addr = self.socket.accept()
-            received = ''
             while True:
                 data = conn.recv(4096).decode()
                 if not data:
                     break
-                received += data
-                print(data)
-                conn.send(bytes("Server says: " + received, 'utf-8'))
+                self.command_handler.handle_command(data)
+                conn.send("ack".encode("UTF-8"))
             conn.close()
             print('client disconnected')
 
@@ -57,7 +60,7 @@ class Server(object):
         :param target_server_address: address for the server to send cam-feed to on the form 'x.x.x.x'
         :param target_server_port:port to access the target server
         """
-        self.streamer: CamStreamer = CamStreamer(target_server_address, target_server_port)
+        self.streamer.initialize_connection(target_server_address, target_server_port)
         self.stream_thread = threading.Thread(target=self.streamer.serve_footage)
 
     def end_video_stream(self) -> None:

@@ -4,32 +4,30 @@ import socket
 import struct
 import time
 
-import picamera
+try:
+    import picamera
+except ModuleNotFoundError:
+    print("Failed to import picamera module - cam wont be usable")
+
+from .streamer import Streamer
 
 
-class CamStreamer(object):
+class CamStreamer(Streamer):
     """
     Utilizes the RPI cam to serve a stream
     """
 
-    def __init__(self, address: str, port: int):
-        """
-        Constructor
-        :param address: server to send camera feed to
-        :param port: port to access the server
-        """
+    def __init__(self):
         self.rpi_socket: socket = None
         self.connection = None
-        self.address: str = address
-        self.port: int = port
         self.terminate = False
 
-    def initialize_connection(self):
+    def initialize_connection(self, address: str, port: int):
         """
         Initializes connection to the server
         """
         self.rpi_socket = socket.socket()
-        self.rpi_socket.connect((self.address, self.port))
+        self.rpi_socket.connect((address, port))
         self.connection = self.rpi_socket.makefile('wb')
 
     def terminate_connection(self):
@@ -89,9 +87,9 @@ class CamStreamer(object):
 
 
 if __name__ == "__main__":
-    streamer = CamStreamer('192.168.0.110', 8000)
+    streamer = CamStreamer()
     try:
-        streamer.initialize_connection()
+        streamer.initialize_connection('192.168.0.110', 8000)
         streamer.serve_footage(-1)
     finally:
         streamer.terminate_connection()
