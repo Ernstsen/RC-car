@@ -11,6 +11,11 @@ class DictCommandHandler(CommandHandler):
     def __init__(self, commands: Dict[str, Callable[[List[str]], None]]):
         self.commands = commands
 
-    def handle_command(self, command: str) -> None:
-        split: List[str] = command.split(";")
-        self.commands[split[0]](split[1:])
+    def handle_command(self, command: str) -> bool:
+        # noinspection PyBroadException
+        try:
+            split: List[str] = command.split(";")
+            self.commands[split[0]](split[1:])
+            return True
+        except:
+            return False

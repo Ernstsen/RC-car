@@ -11,13 +11,13 @@ class VehicleController(Controller):
         self.connection: socket = server.connect(address, port)
 
     def set_drive(self, val: int) -> None:
-        server.send(self.connection, "DRIVE:" + str(val))
+        server.send(self.connection, "DRIVE;" + str(val))
 
     def set_gear(self, val: int) -> None:
-        server.send(self.connection, "GEAR:" + str(val))
+        server.send(self.connection, "GEAR;" + str(val))
 
     def set_throttle(self, val: int) -> None:
-        server.send(self.connection, "THROTTLE:" + str(val))
+        server.send(self.connection, "THROTTLE;" + str(val))
 
     def set_direction(self, val: int) -> None:
-        server.send(self.connection, "DIRECTION:" + str(val))
+        server.send(self.connection, "DIRECTION;" + str(val))

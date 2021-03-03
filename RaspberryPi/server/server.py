@@ -48,8 +48,11 @@ class Server(object):
                 data = conn.recv(4096).decode()
                 if not data:
                     break
-                self.command_handler.handle_command(data)
-                conn.send("ack".encode("UTF-8"))
+                success: bool = self.command_handler.handle_command(data)
+                if success:
+                    conn.send("ack".encode("UTF-8"))
+                else:
+                    conn.send("nack".encode("UTF-8"))
             conn.close()
             print('client disconnected')
 
