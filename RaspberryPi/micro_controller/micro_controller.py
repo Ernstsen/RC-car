@@ -45,17 +45,17 @@ class VehicleController(Controller):
             self.ser = None
 
     def set_drive(self, val: int) -> None:
-        self.ser.write("DRIVE".encode("utf-8"))
+        self.ser.write("D".encode("utf-8"))
         self.ser.write(bytes(val))
 
     def set_gear(self, val: int) -> None:
-        self.ser.write("GEAR".encode("utf-8"))
+        self.ser.write("G".encode("utf-8"))
         self.ser.write(bytes(val))
 
     def set_throttle(self, val: int) -> None:
-        self.ser.write("THRTL".encode("utf-8"))
+        self.ser.write("P".encode("utf-8"))
         self.ser.write(bytes(val))
 
     def set_direction(self, val: int) -> None:
-        self.ser.write("DIR__".encode("utf-8"))
+        self.ser.write("T".encode("utf-8"))
         self.ser.write(bytes(val))
