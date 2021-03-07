@@ -26,10 +26,10 @@ class ThrottleControls(Frame):
             set_throttle(throttle.get())
 
         label_text: str = "Throttle control - scale from 0 to 10, 0 being off"
-        Label(self.frame, justify="left", text=label_text, wraplength=170, anchor=N + W, width=25) \
+        Label(self.frame, justify="left", text=label_text, wraplength=150, anchor=N + W, width=21) \
             .grid(row=0, column=0, sticky=N + S + W)
 
-        Spinbox(self.frame, from_=0, to_=10, increment=1, state=state, width=1,
+        Spinbox(self.frame, from_=0, to_=10, increment=1, state=state, width=2,
                 textvariable=throttle, command=on_update, font=font) \
             .grid(row=0, column=1, padx=5, pady=5)
 
