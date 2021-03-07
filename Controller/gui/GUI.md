@@ -6,6 +6,10 @@ The primary class in this package is ``GUI``, which creates and manages the gui 
 
 It consists of a number of elements, with varying degrees of configurability.
 
+## Controls
+The constructor takes a ``Controller`` as the ``controller`` argument.
+This is found in the ``vehicle_control`` package, and allows the user interface to control the vehicle in question
+
 ## Elements
 
 This section describes the three element groups ``Video Stream``, ``Main Controls Column``
