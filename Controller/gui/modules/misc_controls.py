@@ -46,7 +46,7 @@ class MiscControlsModule(Frame):
             var = self.state_variables[control.display_name] = IntVar()
 
             def on_update():
-                control.method(var.get() == 1)
+                control.on_change(var.get() == 1)
 
             Radiobutton(frame, variable=var, value=0, state=self.state, command=on_update, text="Off") \
                 .grid(row=1, column=0)
