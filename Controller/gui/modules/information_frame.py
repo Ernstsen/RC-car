@@ -6,7 +6,7 @@ class InformationFrame(Frame):
     Frame for displaying information about the program
     """
 
-    def __init__(self, parent: Frame = None, version: str = "") :
+    def __init__(self, parent: Frame = None, version: str = ""):
         """
         :param parent: parent frame
         """
