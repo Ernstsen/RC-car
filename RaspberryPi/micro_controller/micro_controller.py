@@ -4,7 +4,7 @@ from serial import Serial
 from serial.tools.list_ports import comports
 from serial.tools.list_ports_common import ListPortInfo
 
-from .controller import Controller
+from RaspberryPi.micro_controller.controller import Controller
 
 
 class VehicleController(Controller):
@@ -59,3 +59,32 @@ class VehicleController(Controller):
     def set_direction(self, val: int) -> None:
         self.ser.write("T".encode("utf-8"))
         self.ser.write(bytes(val))
+
+
+if __name__ == "__main__":
+    controller: VehicleController = VehicleController()
+
+    print("Possible COM ports:")
+    for s in controller.get_possible_ports():
+        print(s)
+
+    chosen_port = input("Enter name of COM port to be used:")
+
+    controller.initialize(chosen_port)
+
+    while True:
+        inp: str = input("Input")
+        if inp == "q":
+            break
+        elif inp == "drive":
+            new_val: int = int(input("Input nev value (0/1):"))
+            controller.set_drive(new_val)
+        elif inp == "gear":
+            new_val: int = int(input("Input nev value 1-4:"))
+            controller.set_gear(new_val)
+        elif inp == "throttle":
+            new_val: int = int(input("Input nev value 0-10:"))
+            controller.set_drive(new_val)
+        elif inp == "direction":
+            new_val: int = int(input("Input nev value 0-10:"))
+            controller.set_direction(new_val)
