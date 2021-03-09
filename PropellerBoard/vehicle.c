@@ -7,11 +7,19 @@ typedef struct {
     int8_t gear;        //Between 1 and 4
     int8_t throttle;    // between 0 and 10 - 0 being off
     int8_t direction;   //between 0 and 10, 5 being centered
-} vehicle_state;
+} vehicle_state_struct;
 
-int main()
-{
+void lights_loop(void *ptr);
+
+int main() {
     simpleterm_close();
+
+    vehicle_state_struct vs;
+    vs.lights = 0;
+    vs.drive = 0;
+    vs.gear = 1;
+    vs.throttle = 0;
+    vs.direction = 5;
 
     fdserial *ser = fdserial_open(31, 30, 0, 115200);
 
@@ -48,9 +56,35 @@ int main()
                     pause(10000);
                     low(26);
                     break;
+                case 'L' ://Lights
+                    val = fdserial_rxCheck(ser);
+                    if (val == 1) {
+
+                    }
+                    high(26);
+                    pause(10000);
+                    low(26);
+                    break;
             }
 
             pause(150);
         }
     }
 }
+
+void lights_loop(void *ptr) {
+    vehicle_state_struct *vs = (vehicle_state_struct *) ptr;
+    int lights = 0;
+
+    while (1) {
+        if (vs->lights != lights) {
+            lights = vs->lights;
+            if (lights) {
+                high(27);
+            } else {
+                low(27);
+            }
+        }
+        pause(250);
+    }
+} 
