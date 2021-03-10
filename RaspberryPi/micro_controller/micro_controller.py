@@ -60,6 +60,18 @@ class VehicleController(Controller):
         self.ser.write("T".encode("utf-8"))
         self.ser.write(bytes(val))
 
+    def set_lights(self, val: int) -> None:
+        """
+        Enables light control
+
+        :param val: 1 for on, 0 for off
+        """
+        self.ser.write("L".encode("utf-8"))
+        if val == 1:
+            self.ser.write('1'.encode("utf-8"))
+        else:
+            self.ser.write('0'.encode("utf-8"))
+
 
 if __name__ == "__main__":
     controller: VehicleController = VehicleController()
@@ -77,14 +89,17 @@ if __name__ == "__main__":
         if inp == "q":
             break
         elif inp == "drive":
-            new_val: int = int(input("Input nev value (0/1):"))
+            new_val: int = int(input("Input new value (0/1):"))
             controller.set_drive(new_val)
         elif inp == "gear":
-            new_val: int = int(input("Input nev value 1-4:"))
+            new_val: int = int(input("Input new value 1-4:"))
             controller.set_gear(new_val)
         elif inp == "throttle":
-            new_val: int = int(input("Input nev value 0-10:"))
+            new_val: int = int(input("Input new value 0-10:"))
             controller.set_drive(new_val)
         elif inp == "direction":
-            new_val: int = int(input("Input nev value 0-10:"))
+            new_val: int = int(input("Input new value 0-10:"))
             controller.set_direction(new_val)
+        elif inp == "light":
+            new_val: int = int(input("Input new value 0-1:"))
+            controller.set_lights(new_val)
