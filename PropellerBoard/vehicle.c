@@ -1,15 +1,8 @@
 #include "simpletools.h"    // Include simple tools
 #include "fdserial.h"       // serial communication
+#include "commons.h"        // Shared code between cores
+#include "lights.h"         // Lighting controls
 
-typedef struct {
-    int8_t lights;      //Whether lights are on - acts like boolean
-    int8_t drive;       //Low(0)/High(1) drive
-    int8_t gear;        //Between 1 and 4
-    int8_t throttle;    // between 0 and 10 - 0 being off
-    int8_t direction;   //between 0 and 10, 5 being centered
-} vehicle_state_struct;
-
-void lights_loop(void *ptr);
 
 volatile vehicle_state_struct vs;
 
@@ -73,21 +66,3 @@ int main() {
         pause(150);
     }
 }
-
-void lights_loop(void *ptr) {
-    vehicle_state_struct *vs = (vehicle_state_struct *) ptr;
-
-    int lights = 0;
-
-    while (1) {
-        if (vs->lights != lights) {
-            lights = vs->lights;
-            if (lights == 1) {
-                high(27);
-            } else {
-                low(27);
-            }
-        }
-        pause(250);
-    }
-} 

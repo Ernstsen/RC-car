@@ -1,4 +1,7 @@
 vehicle.c
+lights.h
+lights.c
+commons.h
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
