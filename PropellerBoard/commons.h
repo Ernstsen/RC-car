@@ -3,6 +3,12 @@
 
 #include "simpletools.h"    // Include simple tools
 
+/* Define pins for all interfacing */
+#define SERIAL_PIN_1 = 30
+#define SERIAL_PIN_2 = 31
+#define LIGHTS_PIN_1 = 27
+
+
 typedef struct {
     int8_t lights;      //Whether lights are on - acts like boolean
     int8_t drive;       //Low(0)/High(1) drive
