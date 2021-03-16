@@ -4,9 +4,9 @@
 #include "simpletools.h"    // Include simple tools
 
 /* Define pins for all interfacing */
-#define SERIAL_PIN_1 = 30
-#define SERIAL_PIN_2 = 31
-#define LIGHTS_PIN_1 = 27
+#define SERIAL_PIN_1 30
+#define SERIAL_PIN_2 31
+#define LIGHTS_PIN_1 27
 
 
 typedef struct {

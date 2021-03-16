@@ -10,9 +10,9 @@ void lights_loop(void *ptr) {
         if (vs->lights != lights) {
             lights = vs->lights;
             if (lights == 1) {
-                high(27);
+                high(LIGHTS_PIN_1);
             } else {
-                low(27);
+                low(LIGHTS_PIN_1);
             }
         }
         pause(250);

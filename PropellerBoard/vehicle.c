@@ -15,7 +15,7 @@ int main() {
     vs.throttle = 0;
     vs.direction = 5;
 
-    fdserial * ser = fdserial_open( SERIAL_PIN_2, SERIAL_PIN_1, 0, 115200);
+    fdserial *ser = fdserial_open(SERIAL_PIN_2, SERIAL_PIN_1, 0, 115200);
 
     //Initialize Kernels
     int32_t stack_lights[100];
