@@ -8,11 +8,11 @@ volatile vehicle_state_struct vs;
 
 int main() {
     simpleterm_close();
-    
+
     vs.lights = 0;
     vs.throttle = 0;
     vs.direction = 1;
-    
+
     fdserial *ser = fdserial_open(SERIAL_PIN_2, SERIAL_PIN_1, 0, 115200);
 
     //Initialize Kernels
@@ -41,15 +41,15 @@ int main() {
                 case 'T' ://Direction/Turn
                     val = fdserial_rxChar(ser);
                     switch (val) {
-                      case '0':
-                        vs.direction = 0;
-                        break;
-                      case '1':
-                        vs.direction = 1;
-                        break;
-                      case '2':
-                        vs.direction = 2;
-                        break;
+                        case '0':
+                            vs.direction = 0;
+                            break;
+                        case '1':
+                            vs.direction = 1;
+                            break;
+                        case '2':
+                            vs.direction = 2;
+                            break;
                     }
                     break;
                 case 'L' ://Lights

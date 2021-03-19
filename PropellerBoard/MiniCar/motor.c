@@ -14,19 +14,19 @@ void motor_loop(void *ptr) {
         if (vs->throttle != throttle || vs->direction != direction) {
             throttle = vs->throttle;
             direction = vs->direction;
-            
-            if(throttle){
-              if(direction == 0){
-                high(MOTOR_PIN_LEFT);
-                low(MOTOR_PIN_RIGHT);
-              } else if (direction == 2) {
-                high(MOTOR_PIN_RIGHT);
-                low(MOTOR_PIN_LEFT);
-              } else {
-                high(MOTOR_PIN_LEFT);
-                high(MOTOR_PIN_RIGHT);
-              }
-             } else {
+
+            if (throttle) {
+                if (direction == 0) {
+                    high(MOTOR_PIN_LEFT);
+                    low(MOTOR_PIN_RIGHT);
+                } else if (direction == 2) {
+                    high(MOTOR_PIN_RIGHT);
+                    low(MOTOR_PIN_LEFT);
+                } else {
+                    high(MOTOR_PIN_LEFT);
+                    high(MOTOR_PIN_RIGHT);
+                }
+            } else {
                 low(MOTOR_PIN_LEFT);
                 low(MOTOR_PIN_RIGHT);
             }
