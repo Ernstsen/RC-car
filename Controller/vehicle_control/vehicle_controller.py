@@ -21,3 +21,10 @@ class VehicleController(Controller):
 
     def set_direction(self, val: int) -> None:
         server.send(self.connection, "DIRECTION;" + str(val))
+
+    def set_lights(self, val: int) -> None:
+        server.send(self.connection, "LIGHT;" + str(val))
+
+    def start_stream(self) -> None:
+        server.send(self.connection, "STREAM-INITIALIZE;192.168.0.110;8000")
+        server.send(self.connection, "STREAM-SERVE-FOOTAGE;")

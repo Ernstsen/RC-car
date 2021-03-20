@@ -48,6 +48,7 @@ class CamStreamer(Streamer):
         # Make a file-like object out of the connection
         with picamera.PiCamera() as camera:
             camera.resolution = (640, 480)
+            camera.rotation = 270
             # Start a preview and let the camera warm up for 2 seconds
             camera.start_preview()
             time.sleep(2)

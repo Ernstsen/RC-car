@@ -9,7 +9,7 @@ from tkinter import *
 from PIL import ImageTk, Image
 
 from Controller.communication.server_utilities import create_server
-from .video_viewer import VideoViewer
+from Controller.video.video_viewer import VideoViewer
 
 
 # noinspection PyBroadException
@@ -18,17 +18,18 @@ class VideoStreamReceiver(VideoViewer):
     class for handling the video-stream from the Raspberry Pi
     """
 
-    def __init__(self, display_label: Label, port: int = 8000):
+    def __init__(self, port: int = 8000):
         """
-        :param display_label: label used to display stream inside
         :param port: port to be used when receiving video stream - must be free on this device, as a server is created
         """
-        super().__init__(display_label)
-        self.display_label = display_label
+
         self.server_socket = create_server(port)
-        # Accept a single connection and make a file-like object out of it
-        self.connection = self.server_socket.accept()[0].makefile('rb')
+        self.display_label = None
+        self.connection = None
         self.terminate = False
+
+    def set_label(self, display_label: Label):
+        self.display_label = display_label
 
     def video_stream_loop(self) -> bool:
         """
@@ -37,6 +38,9 @@ class VideoStreamReceiver(VideoViewer):
 
         :return: False if an error occurs, True otherwise
         """
+        # Accept a single connection and make a file-like object out of it
+        self.connection = self.server_socket.accept()[0].makefile('rb')
+
         try:
             while True:
                 elapsed = time.time()
@@ -73,7 +77,8 @@ def run_test() -> None:
     # Create a label in the frame
     label: Label = Label(app)
     label.grid()
-    receiver = VideoStreamReceiver(label)
+    receiver = VideoStreamReceiver()
+    receiver.set_label(label)
 
     stream_thread = threading.Thread(target=receiver.video_stream_loop)
     stream_thread.start()

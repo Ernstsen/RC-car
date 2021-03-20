@@ -1,12 +1,15 @@
 import argparse
 from typing import List, Dict, Callable
+from threading import Thread
 
 try:
     from RaspberryPi.cam import CamStreamer, Streamer
     from RaspberryPi.server import Server, DictCommandHandler
+    from RaspberryPi.micro_controller import VehicleController
 except:
     from cam import CamStreamer, Streamer
     from server import Server, DictCommandHandler
+    from micro_controller import VehicleController
 
 
 def printing_parser(prefix: str):
@@ -27,11 +30,28 @@ def compute_streamer_actions(streamer: Streamer) -> Dict[str, Callable[[List[str
     :param streamer: streamer to be manipulated through commands
     :return: dictionary for all stream-related commands
     """
+    thread = Thread(target=streamer.serve_footage)
     return {
         "STREAM-INITIALIZE": lambda inp: streamer.initialize_connection(inp[0], int(inp[1])),
-        "STREAM-SERVE-FOOTAGE": lambda inp: streamer.serve_footage(),
+        "STREAM-SERVE-FOOTAGE": lambda inp: thread.start(),
         "STREAM-STOP-STREAMING": lambda inp: streamer.stop_camera_streaming(),
         "STREAM-TERMINATE": lambda inp: streamer.terminate_connection()
+    }
+
+
+def compute_controller_actions(controller: VehicleController) -> Dict[str, Callable[[List[str]], None]]:
+    """
+    Builds map for vehicle control actions
+
+    :param controller: vehicle controller
+    :return: dictionary for all controller-related commands
+    """
+    return {
+        "LIGHT": lambda inp: controller.set_lights(int(inp[0])),
+        "DRIVE": lambda inp: controller.set_drive(int(inp[0])),
+        "GEAR": lambda inp: controller.set_gear(int(inp[0])),
+        "THROTTLE": lambda inp: controller.set_throttle(int(inp[0])),
+        "DIRECTION": lambda inp: controller.set_direction(int(inp[0])),
     }
 
 
@@ -41,12 +61,11 @@ if __name__ == "__main__":
 
     cam_streamer = CamStreamer()
 
+    vehicle_controller = VehicleController()
+    vehicle_controller.initialize("/dev/ttyUSB0")
+
     commands = {
-        "test": printing_parser("test"),
-        "DRIVE": printing_parser("DRIVE"),
-        "GEAR": printing_parser("GEAR"),
-        "THROTTLE": printing_parser("THROTTLE"),
-        "DIRECTION": printing_parser("DIRECTION"),
+        **compute_controller_actions(vehicle_controller),
         **compute_streamer_actions(cam_streamer)
     }
 

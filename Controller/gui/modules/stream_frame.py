@@ -1,3 +1,4 @@
+import threading
 from tkinter import Frame, LabelFrame, Label
 
 from Controller.video import VideoViewer
@@ -19,7 +20,8 @@ class StreamFrame(Frame):
         label = Label(self.misc_controls_frame)
         label.grid(row=0, column=0, columnspan=2, rowspan=2, padx=5, pady=5)
         viewer.set_label(label)
-        viewer.video_stream_loop()
+        stream_thread = threading.Thread(target=viewer.video_stream_loop)
+        stream_thread.start()
 
     def grid(self, row=0, column=0, **kwargs):
         self.misc_controls_frame.grid(row=row, column=column, **kwargs)

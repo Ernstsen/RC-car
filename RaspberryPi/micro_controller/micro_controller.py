@@ -4,7 +4,10 @@ from serial import Serial
 from serial.tools.list_ports import comports
 from serial.tools.list_ports_common import ListPortInfo
 
-from RaspberryPi.micro_controller.controller import Controller
+try:
+    from RaspberryPi.micro_controller.controller import Controller
+except:
+    from .controller import Controller
 
 
 class VehicleController(Controller):
