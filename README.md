@@ -1,3 +1,4 @@
+[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Ernstsen/RC-car.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Ernstsen/RC-car/context:python)
 # RC-car
 
 Repository for code used in creating a remote-controlled car. The car is controlled through a python interface, on a
