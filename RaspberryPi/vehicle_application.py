@@ -1,8 +1,12 @@
 import argparse
 from typing import List, Dict, Callable
 
-from RaspberryPi.cam import CamStreamer, Streamer
-from RaspberryPi.server import Server, DictCommandHandler
+try:
+    from RaspberryPi.cam import CamStreamer, Streamer
+    from RaspberryPi.server import Server, DictCommandHandler
+except:
+    from cam import CamStreamer, Streamer
+    from server import Server, DictCommandHandler
 
 
 def printing_parser(prefix: str):

@@ -3,9 +3,14 @@ import argparse
 import socket
 import threading
 
-from RaspberryPi.cam import Streamer
-from RaspberryPi.server.command_handler import CommandHandler
-from RaspberryPi.server.printing_command_handler import PrintingCommandHandler
+try:
+    from RaspberryPi.cam import Streamer
+    from RaspberryPi.server.command_handler import CommandHandler
+    from RaspberryPi.server.printing_command_handler import PrintingCommandHandler
+except:
+    from cam import Streamer
+    from server.command_handler import CommandHandler
+    from server.printing_command_handler import PrintingCommandHandler
 
 
 class Server(object):
