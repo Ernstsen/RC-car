@@ -13,9 +13,10 @@ class DictCommandHandler(CommandHandler):
 
     def handle_command(self, command: str) -> bool:
         # noinspection PyBroadException
+        success = False
         try:
             split: List[str] = command.split(";")
             self.commands[split[0]](split[1:])
-            return True
-        except:
-            return False
+            success = True
+        finally:
+            return success

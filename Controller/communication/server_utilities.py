@@ -10,7 +10,7 @@ def create_server(port: int) -> socket:
     :return: socket with an active connection to the specified server
     """
     server = socket.socket()
-    server.bind(('0.0.0.0', port))
+    server.bind((socket.gethostname(), port))
     server.listen(0)
     return server
 

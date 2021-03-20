@@ -6,7 +6,7 @@ try:
     from RaspberryPi.cam import CamStreamer, Streamer
     from RaspberryPi.server import Server, DictCommandHandler
     from RaspberryPi.micro_controller import VehicleController
-except:
+except ModuleNotFoundError:
     from cam import CamStreamer, Streamer
     from server import Server, DictCommandHandler
     from micro_controller import VehicleController

@@ -23,18 +23,18 @@ def mini_car_config(controller: VehicleController) -> Tuple[Dict[str, bool], Lis
     :param controller: the controller used in communicating with the vehicle
     :return: configuration for MiniCar, Misc map
     """
-    enabled = {
+    mini_enabled = {
         "misc": True,
         "throttle": True,
         "direction": True
     }
 
-    misc = [
+    mini_misc = [
         MiscControlSpec("lights", lambda v: controller.set_lights((1 if v else 0)), param_type=bool, row=0, column=0,
                         description="Toggles lights on vehicle")
     ]
 
-    return enabled, misc
+    return mini_enabled, mini_misc
 
 
 if __name__ == "__main__":
@@ -43,7 +43,7 @@ if __name__ == "__main__":
         "MiniCar": mini_car_config
     }
 
-    vehicle_controller: VehicleController = VehicleController("127.0.0.1", 8080)
+    vehicle_controller: VehicleController = VehicleController("192.168.0.105", 8080)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-config", dest="config", default="Fallback", type=str)

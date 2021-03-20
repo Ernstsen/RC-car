@@ -7,7 +7,7 @@ try:
     from RaspberryPi.cam import Streamer
     from RaspberryPi.server.command_handler import CommandHandler
     from RaspberryPi.server.printing_command_handler import PrintingCommandHandler
-except:
+except ModuleNotFoundError:
     from cam import Streamer
     from server.command_handler import CommandHandler
     from server.printing_command_handler import PrintingCommandHandler
@@ -40,7 +40,7 @@ class Server(object):
         self.socket = socket.socket(family, socket_kind)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        self.socket.bind(('0.0.0.0', self.port))
+        self.socket.bind((socket.gethostname(), self.port))
         self.socket.listen(1)  # listens for only one connection
 
     def server_loop(self) -> None:

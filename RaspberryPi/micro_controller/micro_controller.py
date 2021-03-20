@@ -6,7 +6,7 @@ from serial.tools.list_ports_common import ListPortInfo
 
 try:
     from RaspberryPi.micro_controller.controller import Controller
-except:
+except ModuleNotFoundError:
     from .controller import Controller
 
 

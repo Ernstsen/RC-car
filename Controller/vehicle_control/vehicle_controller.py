@@ -1,4 +1,5 @@
-from Controller.communication import server_utilities as server, socket
+import socket
+from Controller.communication import server_utilities as server, Configurator
 from .controller import Controller
 
 
@@ -26,5 +27,5 @@ class VehicleController(Controller):
         server.send(self.connection, "LIGHT;" + str(val))
 
     def start_stream(self) -> None:
-        server.send(self.connection, "STREAM-INITIALIZE;192.168.0.110;8000")
+        server.send(self.connection, "STREAM-INITIALIZE;" + Configurator.get_local_ip() + ";8000")
         server.send(self.connection, "STREAM-SERVE-FOOTAGE;")
