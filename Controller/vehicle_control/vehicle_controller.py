@@ -1,6 +1,11 @@
 import socket
-from Controller.communication import server_utilities as server, Configurator
+
 from .controller import Controller
+
+try:
+    from communication import server_utilities as server, Configurator
+except ModuleNotFoundError:
+    from Controller.communication import server_utilities as server, Configurator
 
 
 class VehicleController(Controller):

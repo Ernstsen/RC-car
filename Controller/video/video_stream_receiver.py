@@ -8,8 +8,12 @@ from tkinter import *
 
 from PIL import ImageTk, Image
 
-from Controller.communication.server_utilities import create_server
-from Controller.video.video_viewer import VideoViewer
+try:
+    from Controller.communication.server_utilities import create_server
+    from Controller.video.video_viewer import VideoViewer
+except ModuleNotFoundError:
+    from communication.server_utilities import create_server
+    from .video_viewer import VideoViewer
 
 
 # noinspection PyBroadException

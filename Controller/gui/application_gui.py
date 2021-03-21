@@ -2,10 +2,16 @@ from tkinter import *
 from tkinter.font import Font
 from typing import Dict, List
 
-from Controller.gui.model import MiscControlSpec
-from Controller.gui.modules import *
-from Controller.vehicle_control import Controller, ControllerSimulator
-from Controller.video import VideoViewer, StaticImageViewer
+try:
+    from Controller.gui.model import MiscControlSpec
+    from Controller.gui.modules import *
+    from Controller.vehicle_control import Controller, ControllerSimulator
+    from Controller.video import VideoViewer, StaticImageViewer
+except ModuleNotFoundError:
+    from .model import MiscControlSpec
+    from .modules import *
+    from vehicle_control import Controller, ControllerSimulator
+    from video import VideoViewer, StaticImageViewer
 
 
 class GUI(Frame):
@@ -154,7 +160,7 @@ class GUI(Frame):
         enabled: bool = self.enabled["gear"]
         state = ("normal" if enabled else "disabled")
         frame: Frame = frames["gear_controls"]
-        GearControls(frame, state=state, set_gear=self.controller.set_drive, font=self.spinbox_font)\
+        GearControls(frame, state=state, set_gear=self.controller.set_drive, font=self.spinbox_font) \
             .grid(sticky=N + S + E + W)
 
     def draw_throttle_controls(self, frames: Dict[str, Frame]) -> None:
@@ -169,7 +175,7 @@ class GUI(Frame):
         enabled: bool = self.enabled["throttle"]
         state = ("normal" if enabled else "disabled")
         frame: Frame = frames["throttle_controls"]
-        ThrottleControls(frame, state=state, set_throttle=self.controller.set_throttle, font=self.spinbox_font)\
+        ThrottleControls(frame, state=state, set_throttle=self.controller.set_throttle, font=self.spinbox_font) \
             .grid(sticky=N + S + E + W)
 
     def draw_direction_controls(self, frames: Dict[str, Frame]) -> None:

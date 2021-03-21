@@ -1,10 +1,16 @@
 import argparse
 from typing import Dict, List, Tuple, Callable
 
-from Controller.gui.application_gui import GUI
-from Controller.gui.model import MiscControlSpec
-from Controller.vehicle_control import VehicleController
-from Controller.video import VideoStreamReceiver
+try:
+    from Controller.gui.application_gui import GUI
+    from Controller.gui.model import MiscControlSpec
+    from Controller.vehicle_control import VehicleController
+    from Controller.video import VideoStreamReceiver
+except ModuleNotFoundError:
+    from gui.application_gui import GUI
+    from gui.model import MiscControlSpec
+    from vehicle_control import VehicleController
+    from video import VideoStreamReceiver
 
 
 def default_vehicle_config(controller: VehicleController) -> Tuple[Dict[str, bool], List[MiscControlSpec]]:

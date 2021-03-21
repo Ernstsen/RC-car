@@ -1,7 +1,10 @@
 import threading
 from tkinter import Frame, LabelFrame, Label
 
-from Controller.video import VideoViewer
+try:
+    from Controller.video import VideoViewer
+except ModuleNotFoundError:
+    from video import VideoViewer
 
 
 class StreamFrame(Frame):
