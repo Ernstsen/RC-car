@@ -49,17 +49,20 @@ if __name__ == "__main__":
         "MiniCar": mini_car_config
     }
 
-    vehicle_controller: VehicleController = VehicleController("192.168.0.105", 8080)
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-config", dest="config", default="Fallback", type=str)
+    parser.add_argument("-vehicleAddress", dest="vehicle_address", default="192.168.0.105", type=str)
+    parser.add_argument("-vehiclePort", dest="vehicle_port", default=8080, type=int)
+    parser.add_argument("-streamPort", dest="stream_port", default=8000, type=int)
 
     args = parser.parse_args()
 
     if args.config in configuration_builders:
+        vehicle_controller: VehicleController = VehicleController(args.vehicle_address, args.vehicle_port)
+
         enabled, misc = configuration_builders[args.config](vehicle_controller)
 
-        streamer = VideoStreamReceiver(8000)
+        streamer = VideoStreamReceiver(args.stream_port)
         gui = GUI(viewer=streamer, controller=vehicle_controller, enabled=enabled, misc_controls=misc)
 
         vehicle_controller.start_stream()
