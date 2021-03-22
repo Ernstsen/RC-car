@@ -1,6 +1,6 @@
 import socket
 
-from .controller import Controller
+from .vehicle_controller_interface import VehicleControllerI
 
 try:
     from communication import server_utilities as server, Configurator
@@ -8,7 +8,7 @@ except ModuleNotFoundError:
     from Controller.communication import server_utilities as server, Configurator
 
 
-class VehicleController(Controller):
+class VehicleController(VehicleControllerI):
     """
     Controller implementation communicating with the RC vehicle
     """

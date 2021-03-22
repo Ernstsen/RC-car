@@ -1,7 +1,7 @@
-from .controller import Controller
+from .vehicle_controller_interface import VehicleControllerI
 
 
-class ControllerSimulator(Controller):
+class ControllerSimulator(VehicleControllerI):
     """
     Controller implementation with
     """

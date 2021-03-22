@@ -1,4 +1,4 @@
-class Controller(object):
+class VehicleControllerI(object):
     """
     Class handling the translation between commands and messages sent to the vehicle
     """
