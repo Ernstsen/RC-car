@@ -49,13 +49,13 @@ class VideoStreamReceiver(VideoViewer):
             self.display_label.imgtk = self.img
             self.display_label.configure(image=self.img)
 
-    @staticmethod
-    def loop_repeater(func: Callable[[], bool]) -> None:
+    def loop_repeater(self, func: Callable[[], bool]) -> None:
         """
         Repeats loop, and prints result of each iteration
         """
         while True:
             res: bool = func()
+            self.set_placeholder()
             if res:
                 print("Loop terminated successfully")
             else:
