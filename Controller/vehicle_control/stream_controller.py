@@ -1,3 +1,4 @@
+from time import sleep
 from typing import Callable
 
 
@@ -6,27 +7,15 @@ class StreamControllerI(object):
     Interface for abstracting away handling stream-related actions
     """
 
-    def initialize_connection(self) -> None:
+    def start_stream(self) -> None:
         """
-        Initializes the stream
-        """
-        pass
-
-    def terminate_connection(self) -> None:
-        """
-        Terminates streaming
+        Initializes the stream, and begins to stream
         """
         pass
 
-    def serve_footage(self) -> None:
+    def stop_stream(self) -> None:
         """
-        Begins serving footage, requires an active connection.
-        """
-        pass
-
-    def stop_camera_streaming(self) -> None:
-        """
-        Requests the temporary stop of video streaming. Does not terminate the active connection
+        Requests the temporary stop of video streaming. Terminates the connection
         """
         pass
 
@@ -43,14 +32,11 @@ class SimpleStreamController(StreamControllerI):
         self.serve = serve
         self.stop_serve = stop_serve
 
-    def initialize_connection(self) -> None:
+    def start_stream(self) -> None:
         self.initialize()
-
-    def terminate_connection(self) -> None:
-        self.terminate()
-
-    def serve_footage(self) -> None:
         self.serve()
 
-    def stop_camera_streaming(self) -> None:
+    def stop_stream(self) -> None:
         self.stop_serve()
+        sleep(1)
+        self.terminate()

@@ -211,10 +211,8 @@ class GUI(Frame):
 
         cam_controls_menu = Menu(top_bar, tearoff=0)
 
-        cam_controls_menu.add_command(label="Initialize Streaming Connection", command=controller.initialize_connection)
-        cam_controls_menu.add_command(label="Start Streaming", command=controller.serve_footage)
-        cam_controls_menu.add_command(label="Stop Steaming", command=controller.stop_camera_streaming)
-        cam_controls_menu.add_command(label="Terminate Streaming Connection", command=controller.terminate_connection)
+        cam_controls_menu.add_command(label="Start Streaming", command=controller.start_stream)
+        cam_controls_menu.add_command(label="Stop Steaming", command=controller.stop_stream)
         top_bar.add_cascade(label="Video", menu=cam_controls_menu, underline=0)
 
 

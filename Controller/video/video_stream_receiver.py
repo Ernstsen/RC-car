@@ -5,6 +5,7 @@ import struct
 import threading
 import time
 from tkinter import *
+from typing import Callable
 
 from PIL import ImageTk, Image
 
@@ -16,26 +17,54 @@ except ModuleNotFoundError:
     from .video_viewer import VideoViewer
 
 
-# noinspection PyBroadException
 class VideoStreamReceiver(VideoViewer):
     """
     class for handling the video-stream from the Raspberry Pi
     """
 
-    def __init__(self, port: int = 8000):
+    def __init__(self, port: int = 8000, placeholder_image_name: str = None):
         """
         :param port: port to be used when receiving video stream - must be free on this device, as a server is created
+        :param placeholder_image_name: Image to be displayed until stream starts - and after it terminates
         """
 
-        self.server_socket = create_server(port)
+        self.port = port
+        self.server_socket = None
         self.display_label = None
         self.connection = None
         self.terminate = False
+        self.img = None
+        self.placeholder = placeholder_image_name
 
     def set_label(self, display_label: Label):
         self.display_label = display_label
+        self.set_placeholder()
 
-    def video_stream_loop(self) -> bool:
+    def set_placeholder(self):
+        """
+        Displays placeholder image
+        """
+        if self.placeholder:
+            self.img: PhotoImage = PhotoImage(file=self.placeholder)
+            self.display_label.imgtk = self.img
+            self.display_label.configure(image=self.img)
+
+    @staticmethod
+    def loop_repeater(func: Callable[[], bool]) -> None:
+        """
+        Repeats loop, and prints result of each iteration
+        """
+        while True:
+            res: bool = func()
+            if res:
+                print("Loop terminated successfully")
+            else:
+                print("Loop terminated with error")
+
+    def video_stream_loop(self) -> None:
+        self.loop_repeater(self.video_stream_loop_inner)
+
+    def video_stream_loop_inner(self) -> bool:
         """
         The stream loop, which reads the loop and updates the label with the new images
         Does not terminate until an error occurs or self.terminate becomes True
@@ -43,6 +72,7 @@ class VideoStreamReceiver(VideoViewer):
         :return: False if an error occurs, True otherwise
         """
         # Accept a single connection and make a file-like object out of it
+        self.server_socket = create_server(self.port)
         self.connection = self.server_socket.accept()[0].makefile('rb')
 
         try:

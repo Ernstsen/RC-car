@@ -30,10 +30,9 @@ def compute_streamer_actions(streamer: Streamer) -> Dict[str, Callable[[List[str
     :param streamer: streamer to be manipulated through commands
     :return: dictionary for all stream-related commands
     """
-    thread = Thread(target=streamer.serve_footage)
     return {
         "STREAM-INITIALIZE": lambda inp: streamer.initialize_connection(inp[0], int(inp[1])),
-        "STREAM-SERVE-FOOTAGE": lambda inp: thread.start(),
+        "STREAM-SERVE-FOOTAGE": lambda inp: streamer.serve_footage(),
         "STREAM-STOP-STREAMING": lambda inp: streamer.stop_camera_streaming(),
         "STREAM-TERMINATE": lambda inp: streamer.terminate_connection()
     }
