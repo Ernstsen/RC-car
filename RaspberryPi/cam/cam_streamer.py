@@ -3,6 +3,7 @@ import io
 import socket
 import struct
 import time
+from threading import Thread
 
 try:
     import picamera
@@ -21,11 +22,14 @@ class CamStreamer(Streamer):
         self.rpi_socket: socket = None
         self.connection = None
         self.terminate = False
+        self.thread = None
+        self.time_limit: int = -1
 
     def initialize_connection(self, address: str, port: int):
         """
         Initializes connection to the server
         """
+        print("Initializing connection")
         self.rpi_socket = socket.socket()
         self.rpi_socket.connect((address, port))
         self.connection = self.rpi_socket.makefile('wb')
@@ -36,15 +40,27 @@ class CamStreamer(Streamer):
         """
         self.connection.close()
         self.rpi_socket.close()
+        self.connection = None
+        self.rpi_socket = None
 
-    def serve_footage(self, time_limit: int = -1):
+    def serve_footage(self, time_limit: int = -1) -> None:
+        """
+        Starts serving video footage in separate thread
+
+        :param time_limit: how many seconds the stream should be served. If <0, stream continues forever
+        """
+        self.time_limit = time_limit
+        self.thread = Thread(target=self.serve_footage_loop)
+        self.thread.start()
+
+    def serve_footage_loop(self):
         """
         Serves camera footage live
 
         If no limit is given, streaming can be stopped by calling 'stop_camera_streaming'
-
-        :param time_limit: how many seconds the stream should be served. If <0, stream continues forever
         """
+        print("Serving footage!")
+        self.terminate = False
         # Make a file-like object out of the connection
         with picamera.PiCamera() as camera:
             camera.resolution = (640, 480)
@@ -71,7 +87,7 @@ class CamStreamer(Streamer):
                 stream.seek(0)
                 self.connection.write(stream.read())
                 # If we've been capturing for more than time_limit seconds, quit
-                if 0 < time_limit < time.time() - start or self.terminate:
+                if 0 < self.time_limit < time.time() - start or self.terminate:
                     break
                 # Reset the stream for the next capture
                 stream.seek(0)
@@ -79,12 +95,15 @@ class CamStreamer(Streamer):
                 print("Picture took: " + str(elapsed - time.time()))
         # Write a length of zero to the stream to signal we're done
         self.connection.write(struct.pack('<L', 0))
+        print("No longer serving footage")
 
     def stop_camera_streaming(self) -> None:
         """
         Requests that the streamer stops streaming the camera feed
         """
         self.terminate = True
+        self.thread.join()
+        self.thread = None
 
 
 if __name__ == "__main__":

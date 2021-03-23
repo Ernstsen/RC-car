@@ -1,7 +1,6 @@
 # Python program to implement server of controller software
 import argparse
 import socket
-import threading
 
 try:
     from RaspberryPi.cam import Streamer
@@ -31,6 +30,12 @@ class Server(object):
         self.stream_thread = None
         self.initialize_server()
 
+    @staticmethod
+    def get_local_ip():
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 1))  # connect() for UDP doesn't send packets
+        return s.getsockname()[0]
+
     def initialize_server(self) -> None:
         """
         Initializes and configures the server
@@ -40,7 +45,7 @@ class Server(object):
         self.socket = socket.socket(family, socket_kind)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
-        self.socket.bind((socket.gethostname(), self.port))
+        self.socket.bind((self.get_local_ip(), self.port))
         self.socket.listen(1)  # listens for only one connection
 
     def server_loop(self) -> None:
@@ -60,23 +65,6 @@ class Server(object):
                     conn.send("nack".encode("UTF-8"))
             conn.close()
             print('client disconnected')
-
-    def start_video_stream(self, target_server_address: str, target_server_port: int) -> None:
-        """
-        Non-blocking call.
-        Starts the camera, and streams the feed to the target server
-        :param target_server_address: address for the server to send cam-feed to on the form 'x.x.x.x'
-        :param target_server_port:port to access the target server
-        """
-        self.streamer.initialize_connection(target_server_address, target_server_port)
-        self.stream_thread = threading.Thread(target=self.streamer.serve_footage)
-
-    def end_video_stream(self) -> None:
-        """
-        Stops stream the camera-feed
-        """
-        if self.streamer:
-            self.streamer.stop_camera_streaming()
 
 
 if __name__ == "__main__":

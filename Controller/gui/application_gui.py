@@ -5,12 +5,12 @@ from typing import Dict, List
 try:
     from Controller.gui.model import MiscControlSpec
     from Controller.gui.modules import *
-    from Controller.vehicle_control import Controller, ControllerSimulator
+    from Controller.vehicle_control import VehicleControllerI, ControllerSimulator, StreamControllerI
     from Controller.video import VideoViewer, StaticImageViewer
 except ModuleNotFoundError:
     from .model import MiscControlSpec
     from .modules import *
-    from vehicle_control import Controller, ControllerSimulator
+    from vehicle_control import VehicleControllerI, ControllerSimulator, StreamControllerI
     from video import VideoViewer, StaticImageViewer
 
 
@@ -19,10 +19,11 @@ class GUI(Frame):
     Class handling the graphics user interface of the application
     """
 
-    def __init__(self, master=None,
+    def __init__(self, master: Frame = None,
                  viewer: VideoViewer = StaticImageViewer(r"../unnamed.png"),
+                 stream_controller: StreamControllerI = StreamControllerI(),
                  enabled: Dict[str, bool] = None,
-                 controller: Controller = ControllerSimulator(),
+                 controller: VehicleControllerI = ControllerSimulator(),
                  misc_controls: List[MiscControlSpec] = None):
         """
         Constructor for the graphics user interface
@@ -68,6 +69,7 @@ class GUI(Frame):
         self.draw_throttle_controls(structure)
         self.draw_direction_controls(structure)
         self.draw_information(structure)
+        self.draw_cam_feed_controls(master, stream_controller)
 
     @staticmethod
     def build_frame_structure(root_frame: Frame) -> Dict[str, Frame]:
@@ -203,10 +205,20 @@ class GUI(Frame):
         frame: Frame = frames["info"]
         InformationFrame(frame, self.version).grid(sticky=N + S + E + W)
 
+    def draw_cam_feed_controls(self, master: Frame, controller: StreamControllerI) -> None:
+        top_bar = Menu(master)
+        self.master.config(menu=top_bar)
+
+        cam_controls_menu = Menu(top_bar, tearoff=0)
+
+        cam_controls_menu.add_command(label="Start Streaming", command=controller.start_stream)
+        cam_controls_menu.add_command(label="Stop Steaming", command=controller.stop_stream)
+        top_bar.add_cascade(label="Video", menu=cam_controls_menu, underline=0)
+
 
 if __name__ == "__main__":
     misc_controls_dict: List[MiscControlSpec] = [
         MiscControlSpec(display_name="Lights", on_change=lambda v: print(v), param_type=bool, row=0, column=0)
     ]
-    gui = GUI(misc_controls=misc_controls_dict)
+    gui = GUI(viewer=StaticImageViewer(r"../../unnamed.png"), misc_controls=misc_controls_dict)
     gui.mainloop()
