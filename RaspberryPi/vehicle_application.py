@@ -1,6 +1,5 @@
 import argparse
 from typing import List, Dict, Callable
-from threading import Thread
 
 try:
     from RaspberryPi.cam import CamStreamer, Streamer

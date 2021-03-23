@@ -10,7 +10,7 @@ try:
 except ModuleNotFoundError:
     from .model import MiscControlSpec
     from .modules import *
-    from vehicle_control import Controller, ControllerSimulator, StreamControllerI
+    from vehicle_control import VehicleControllerI, ControllerSimulator, StreamControllerI
     from video import VideoViewer, StaticImageViewer
 
 

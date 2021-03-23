@@ -1,7 +1,6 @@
 # Python program to implement server of controller software
 import argparse
 import socket
-import threading
 
 try:
     from RaspberryPi.cam import Streamer
