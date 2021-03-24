@@ -9,7 +9,7 @@ class DirectionControls(Frame):
     """
 
     def __init__(self, parent: Frame = None, state: str = "normal",
-                 set_direction: Callable[[int], None] = lambda val: None):
+                 set_direction: Callable[[int], bool] = lambda val: None):
         """
         :param parent: parent frame
         :param state: can be 'normal' or 'disabled', decides whether

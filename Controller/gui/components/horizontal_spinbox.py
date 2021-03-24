@@ -8,7 +8,7 @@ class HorizontalSpinbox(Widget):
     """
 
     def __init__(self, master, from_=0, start=5, to_=10, increment=1, state="active",
-                 on_update: Callable[[int], None] = lambda *args, **kwargs: None):
+                 on_update: Callable[[int], bool] = lambda *args, **kwargs: None):
         super().__init__(master, "label")
         self.from_: int = from_
         self.to_: int = to_
@@ -31,11 +31,10 @@ class HorizontalSpinbox(Widget):
         self.on_update(value)
 
     def increment_func(self):
-        if self.value < self.to_:
+        if self.value < self.to_ and self.update_value(self.value):
             self.value += 1
-        self.update_value(self.value)
 
     def decrement_func(self):
-        if self.value > self.from_:
+        if self.value > self.from_ and self.update_value(self.value):
             self.value -= 1
-        self.update_value(self.value)
+        
