@@ -45,7 +45,6 @@ def send(conn: socket, msg: str, msg_length: int = 4096) -> bool:
     if not "ack" == str(from_server):
         print("Received message different from 'ack' as response. Terminating connection. Response was: "
               + str(from_server))
-        terminate(conn)
         return False
     return True
 
