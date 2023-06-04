@@ -1,5 +1,11 @@
 # Python program to implement client side of the control-flow
 import socket
+import sys
+
+try:
+    from communication import Configurator
+except ModuleNotFoundError:
+    from Controller.communication import Configurator
 
 
 def create_server(port: int) -> socket:
@@ -10,7 +16,8 @@ def create_server(port: int) -> socket:
     :return: socket with an active connection to the specified server
     """
     server = socket.socket()
-    server.bind((socket.gethostname(), port))
+    address = (Configurator.get_local_ip(), port)
+    server.bind(address)
     server.listen(0)
     return server
 
@@ -38,8 +45,14 @@ def send(conn: socket, msg: str, msg_length: int = 4096) -> bool:
     :param msg_length: length of the message to be sent. Default is 4096
     :return: whether a response has been received and logged to terminal
     """
-    conn.send(msg.encode())
-    from_server = conn.recv(msg_length).decode()
+    try:
+        conn.send(msg.encode())
+        from_server = conn.recv(msg_length).decode()
+    except OSError as err:
+        print("Failed to receive message: ", msg, " Error: ", err)
+        conn.close()
+        sys.exit(-1)
+
     if not from_server:
         return False
     if not "ack" == str(from_server):

@@ -10,7 +10,10 @@ try:
 except ModuleNotFoundError:
     print("Failed to import picamera module - cam wont be usable")
 
-from .streamer import Streamer
+try:
+    from RaspberryPi.cam.streamer import Streamer
+except ModuleNotFoundError:
+    from .streamer import Streamer
 
 
 class CamStreamer(Streamer):
@@ -33,6 +36,7 @@ class CamStreamer(Streamer):
         self.rpi_socket = socket.socket()
         self.rpi_socket.connect((address, port))
         self.connection = self.rpi_socket.makefile('wb')
+        print("CamStreamer:", "Finished initializing")
 
     def terminate_connection(self):
         """

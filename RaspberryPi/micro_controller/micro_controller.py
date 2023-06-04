@@ -37,12 +37,15 @@ class VehicleController(Controller):
 
         :param port: the COM-port to be the target of the connection
         """
+        print("MicroController", "Initializing communication on port", port)
         self.ser: Serial = Serial(port=port, baudrate=115200, timeout=2)
+        print("MicroController", "Finished initializing communication on port", port)
 
     def terminate(self) -> None:
         """
         closes the serial connection, if present.
         """
+        print("MicroController", "Terminating communication")
         if self.ser:
             self.ser.close()
             self.ser = None
