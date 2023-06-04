@@ -10,7 +10,10 @@ try:
 except ModuleNotFoundError:
     print("Failed to import picamera module - cam wont be usable")
 
-from .streamer import Streamer
+try:
+    from RaspberryPi.cam.streamer import Streamer
+except ModuleNotFoundError:
+    from .streamer import Streamer
 
 
 class CamStreamer(Streamer):
