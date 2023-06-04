@@ -33,10 +33,16 @@ class SimpleStreamController(StreamControllerI):
         self.stop_serve = stop_serve
 
     def start_stream(self) -> None:
+        print("SimpleStreamController", "Initializing")
         self.initialize()
+        print("SimpleStreamController", "Starting serving")
         self.serve()
+        print("SimpleStreamController", "Started")
 
     def stop_stream(self) -> None:
+        print("SimpleStreamController", "Stopping")
         self.stop_serve()
         sleep(1)
+        print("SimpleStreamController", "Terminating")
         self.terminate()
+        print("SimpleStreamController", "Terminated")
