@@ -1,4 +1,4 @@
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Ernstsen/RC-car.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Ernstsen/RC-car/context:python)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/6e5bb01af8bd4b939eaf68b096ddbc98)](https://app.codacy.com/gh/Ernstsen/RC-car/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 # RC-car
 
 Repository for code used in creating a remote-controlled car. The car is controlled through a python interface, on a
