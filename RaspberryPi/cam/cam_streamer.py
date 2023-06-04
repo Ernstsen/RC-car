@@ -36,6 +36,7 @@ class CamStreamer(Streamer):
         self.rpi_socket = socket.socket()
         self.rpi_socket.connect((address, port))
         self.connection = self.rpi_socket.makefile('wb')
+        print("CamStreamer:", "Finished initializing")
 
     def terminate_connection(self):
         """
