@@ -29,7 +29,7 @@ class CamStreamer(Streamer):
         """
         Initializes connection to the server
         """
-        print("Initializing connection")
+        print("CamStreamer:", "Initializing connection to:", address + ":" + str(port))
         self.rpi_socket = socket.socket()
         self.rpi_socket.connect((address, port))
         self.connection = self.rpi_socket.makefile('wb')
@@ -38,6 +38,7 @@ class CamStreamer(Streamer):
         """
         Terminates connection, and closes socket
         """
+        print("CamStreamer:", "Terminating connection")
         self.connection.close()
         self.rpi_socket.close()
         self.connection = None
@@ -59,7 +60,7 @@ class CamStreamer(Streamer):
 
         If no limit is given, streaming can be stopped by calling 'stop_camera_streaming'
         """
-        print("Serving footage!")
+        print("CamStreamer:", "Serving footage!")
         self.terminate = False
         # Make a file-like object out of the connection
         with picamera.PiCamera() as camera:
@@ -92,10 +93,10 @@ class CamStreamer(Streamer):
                 # Reset the stream for the next capture
                 stream.seek(0)
                 stream.truncate()
-                print("Picture took: " + str(elapsed - time.time()))
+                print("CamStreamer:", "Picture took: " + str(elapsed - time.time()))
         # Write a length of zero to the stream to signal we're done
         self.connection.write(struct.pack('<L', 0))
-        print("No longer serving footage")
+        print("CamStreamer:", "No longer serving footage")
 
     def stop_camera_streaming(self) -> None:
         """
